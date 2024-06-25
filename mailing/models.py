@@ -45,6 +45,7 @@ class Massage(models.Model):
 
 
 class Mailing_attempt(models.Model):
+    mailing_id = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='id рассылки')
     last_attempt = models.DateTimeField(auto_now_add=True, verbose_name='дата и время последней попытки')
     status = models.BooleanField(default=False, verbose_name='статус попытки')
     mail_response = models.CharField(max_length=50, verbose_name='ответ почтового сервера')

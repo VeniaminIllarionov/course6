@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'project',
+        'NAME': os.getenv('NAME_DB'),
         'USER': os.getenv('DATABASES_USER'),
         'PASSWORD': os.getenv('DATABASES_PASSWORD'),
     }
@@ -139,8 +139,8 @@ EMAIL_USE_SSL = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('MAIL_PASSWORD')
 
-SERVER_EMAIL = 'EMAIL_HOST_USER'
-DEFAULT_FROM_EMAIL = 'EMAIL_HOST_USER'
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 #AUTH_USER_MODEL = 'users.User'
 
@@ -150,10 +150,10 @@ LOGOUT_REDIRECT_URL = '/'
 
 CACHE_ENABLED = os.getenv('CACHE_ENABLED') == 'True'
 
-if CACHE_ENABLED:
-    CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.redis.RedisCache",
-            "LOCATION": os.getenv('CACHE_LOCATION'),
-        }
-    }
+#if CACHE_ENABLED:
+    #CACHES = {
+        #"default": {
+           # "BACKEND": "django.core.cache.backends.redis.RedisCache",
+           # "LOCATION": os.getenv('CACHE_LOCATION'),
+       # }
+   # }
