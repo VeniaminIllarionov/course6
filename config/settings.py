@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'mailing'
+    'mailing',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -142,7 +143,7 @@ EMAIL_HOST_PASSWORD = os.getenv('MAIL_PASSWORD')
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-#AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'users.User'
 
 LOGIN_REDIRECT_URL = '/'
 

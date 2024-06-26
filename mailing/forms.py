@@ -1,9 +1,7 @@
 from django import forms
 from django.forms import BooleanField
 
-from catalog.models import Product, Version, Category
-
-words = ('казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция', 'радар')
+from mailing.models import Mailing, Massage
 
 
 class StyleFormMixin(forms.ModelForm):
@@ -18,47 +16,22 @@ class StyleFormMixin(forms.ModelForm):
                 field.widget.attrs['placeholder'] = field.label
 
 
-class ProductForm(StyleFormMixin, forms.ModelForm):
+class MailingForm(StyleFormMixin, forms.ModelForm):
     class Meta:
-        model = Product
-        exclude = ('is_published',)
-
-    def clean_name(self):
-        cleaned_data = self.cleaned_data.get('name')
-
-        if cleaned_data in words:
-            raise forms.ValidationError('Возникла ошибка в Наименовании')
-        return cleaned_data
+        model = Mailing
+        exclude = ('mailing_status',)
 
 
-class ProductManagerForm(StyleFormMixin, forms.ModelForm):
+class MailingManagerForm(StyleFormMixin, forms.ModelForm):
     class Meta:
-        model = Product
-        fields = ('description', 'is_published', 'category')
-
-    def clean_name(self):
-        cleaned_data = self.cleaned_data.get('name')
-
-        if cleaned_data in words:
-            raise forms.ValidationError('Возникла ошибка в Наименовании')
-        return cleaned_data
+        model = Mailing
+        fields = ('frequency',)
 
 
-def clean_description(self):
-    cleaned_data = self.cleaned_data.get('description')
-
-    if cleaned_data in words:
-        raise forms.ValidationError('Возникла ошибка в Описании')
-    return cleaned_data
-
-
-class VersionForm(StyleFormMixin, forms.ModelForm):
+class MassageForm(StyleFormMixin, forms.ModelForm):
     class Meta:
-        model = Version
+        model = Massage
         fields = '__all__'
 
 
-class CategoryForm(StyleFormMixin, forms.ModelForm):
-    class Meta:
-        model = Category
-        fields = ('name',)
+

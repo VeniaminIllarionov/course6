@@ -8,14 +8,14 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView
 
 from config.settings import EMAIL_HOST_USER
-from users1.forms import UserRegisterForm
-from users1.models import User
+from users.forms import UserRegisterForm
+from users.models import User
 
 
 class UserCreateView(CreateView):
     model = User
     form_class = UserRegisterForm
-    success_url = reverse_lazy('users1:login')
+    success_url = reverse_lazy('users:login')
 
     def form_valid(self, form):
         user = form.save()
@@ -38,12 +38,12 @@ def email_confirm(request, token):
     user = get_object_or_404(User, token=token)
     user.is_active = True
     user.save()
-    return redirect(reverse('users1:login'))
+    return redirect(reverse('users:login'))
 
 
 class GeneratePasswordView(PasswordResetView):
     form_class = PasswordResetForm
-    success_url = reverse_lazy('users1:login')
+    success_url = reverse_lazy('users:login')
 
     def form_valid(self, form):
         if form.is_valid():
@@ -59,4 +59,4 @@ class GeneratePasswordView(PasswordResetView):
                     from_email=EMAIL_HOST_USER,
                     recipient_list=[user.email],
                 )
-            return redirect(reverse("users1:login"))
+            return redirect(reverse("users:login"))

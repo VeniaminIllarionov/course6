@@ -19,29 +19,21 @@ class MailingListView(ListView):
         return get_qs_from_cache(qs=Mailing.objects.all(), key='mailings_list')
 
 
-def contacts(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        phone = request.POST.get('phone')
-        message = request.POST.get('message')
-        print(f'У вас новое сообщение: {name}({phone}): {message}')
-    return render(request, 'mailing/contacts.html')
 
-
-class ProductCreateView(LoginRequiredMixin, CreateView):
-    model = Product
-    form_class = ProductForm
+class MailingCreateView(LoginRequiredMixin, CreateView):
+    model = Mailing
+    form_class = MailingForm
     success_url = reverse_lazy('mailing:home')
-    login_url = "users:login"
+    login_url = "users1:login"
     redirect_field_name = "redirect_to"
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        VersionFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
+        MessageFormset = inlineformset_factory(Mailing, Massage, form=MassageForm, extra=1)
         if self.request.method == 'POST':
-            context_data['formset'] = VersionFormset(self.request.POST)
+            context_data['formset'] = MassageFormset(self.request.POST)
         else:
-            context_data['formset'] = VersionFormset()
+            context_data['formset'] = MassageFormset()
         return context_data
 
     def form_valid(self, form):
@@ -59,20 +51,20 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
-    model = Product
-    form_class = ProductForm
+class MailingUpdateView(LoginRequiredMixin, UpdateView):
+    model = Mailing
+    form_class = MailingForm
     success_url = reverse_lazy('mailing:home')
-    login_url = "users:login"
+    login_url = "users1:login"
     redirect_field_name = "redirect_to"
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        VersionFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
+        Massage = inlineformset_factory(Mailing, Massage, form=MassageForm, extra=1)
         if self.request.method == 'POST':
-            context_data['formset'] = VersionFormset(self.request.POST, instance=self.object)
+            context_data['formset'] = MassageFormset(self.request.POST, instance=self.object)
         else:
-            context_data['formset'] = VersionFormset(instance=self.object)
+            context_data['formset'] = MassageFormset(instance=self.object)
         return context_data
 
     def get_form_class(self):
@@ -81,7 +73,7 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
             return ProductForm
         if user.has_perm('mailing.set_published') and user.has_perm('mailing.can_edit_description') and user.has_perm(
                 'mailing.can_edit_category'):
-            return ProductManagerForm
+            return MailingManagerForm
         raise PermissionDenied
 
     def form_valid(self, form):
@@ -96,28 +88,17 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
-    model = Product
+class MailingDeleteView(LoginRequiredMixin, DeleteView):
+    model = Mailing
     success_url = reverse_lazy('mailing:home')
-    login_url = "users:login"
+    login_url = "users1:login"
     redirect_field_name = "redirect_to"
 
 
-class ProductDetailView(LoginRequiredMixin, DetailView):
-    model = Product
-    template_name = 'mailing/product_detail.html'
-    login_url = "users:login"
+class MailingDetailView(LoginRequiredMixin, DetailView):
+    model = Mailing
+    template_name = 'mailing/mailing_detail.html'
+    login_url = "users1:login"
     redirect_field_name = "redirect_to"
 
 
-class CategoryListView(ListView):
-    model = Category
-    template_name = 'mailing/category_list.html'
-
-    def get_queryset(self):
-        return get_qs_from_cache(qs=Category.objects.all(), key='categories_list')
-
-
-from django.shortcuts import render
-
-# Create your views here.

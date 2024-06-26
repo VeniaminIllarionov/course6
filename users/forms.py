@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 
 from mailing.forms import StyleFormMixin
-from users1.models import User
+from users.models import User
 
 
 class UserRegisterForm(StyleFormMixin, UserCreationForm):
