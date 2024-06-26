@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from mailing.forms import ProductForm, VersionForm, ProductManagerForm, CategoryForm
+from mailing.forms import MailingForm, MassageForm, MailingManagerForm
 from mailing.models import Mailing, Customers, Massage, Mailing_attempt
 from mailing.services import get_qs_from_cache
 
@@ -19,17 +19,16 @@ class MailingListView(ListView):
         return get_qs_from_cache(qs=Mailing.objects.all(), key='mailings_list')
 
 
-
 class MailingCreateView(LoginRequiredMixin, CreateView):
     model = Mailing
     form_class = MailingForm
     success_url = reverse_lazy('mailing:home')
-    login_url = "users1:login"
+    login_url = "users:login"
     redirect_field_name = "redirect_to"
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        MessageFormset = inlineformset_factory(Mailing, Massage, form=MassageForm, extra=1)
+        MassageFormset = inlineformset_factory(Mailing, Massage, form=MassageForm, extra=1)
         if self.request.method == 'POST':
             context_data['formset'] = MassageFormset(self.request.POST)
         else:
@@ -55,22 +54,14 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
     model = Mailing
     form_class = MailingForm
     success_url = reverse_lazy('mailing:home')
-    login_url = "users1:login"
+    login_url = "users:login"
     redirect_field_name = "redirect_to"
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        Massage = inlineformset_factory(Mailing, Massage, form=MassageForm, extra=1)
-        if self.request.method == 'POST':
-            context_data['formset'] = MassageFormset(self.request.POST, instance=self.object)
-        else:
-            context_data['formset'] = MassageFormset(instance=self.object)
-        return context_data
 
     def get_form_class(self):
         user = self.request.user
         if user == self.object.owner:
-            return ProductForm
+            return MailingForm
         if user.has_perm('mailing.set_published') and user.has_perm('mailing.can_edit_description') and user.has_perm(
                 'mailing.can_edit_category'):
             return MailingManagerForm
@@ -91,14 +82,12 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
 class MailingDeleteView(LoginRequiredMixin, DeleteView):
     model = Mailing
     success_url = reverse_lazy('mailing:home')
-    login_url = "users1:login"
+    login_url = "users:login"
     redirect_field_name = "redirect_to"
 
 
 class MailingDetailView(LoginRequiredMixin, DetailView):
     model = Mailing
     template_name = 'mailing/mailing_detail.html'
-    login_url = "users1:login"
+    login_url = "users:login"
     redirect_field_name = "redirect_to"
-
-

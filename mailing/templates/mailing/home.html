@@ -26,11 +26,11 @@
                                 <a class="btn btn-primary" href="{% url 'mailing:mailing_detail' object.pk %}"
                                    role="button">Подробнее</a>
                                 {% if perms.catalog.set_published and perms.catalog.can_edit_description and perms.catalog.can_edit_category or user == object.owner %}
-                                <a class="btn btn-warning" href="{% url 'catalog:edit' object.pk %}"
+                                <a class="btn btn-warning" href="{% url 'mailing:edit' object.pk %}"
                                    role="button">Редактировать</a>
                                 {% endif %}
                                 {% if user == object.owner %}
-                                <a class="btn btn-danger" href="{% url 'catalog:delete' object.pk %}"
+                                <a class="btn btn-danger" href="{% url 'mailing:delete' object.pk %}"
                                    role="button">Удалить</a>
                                 {% endif %}
                             </div>
