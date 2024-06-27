@@ -44,10 +44,23 @@ class Massage(models.Model):
 
 
 class Mailing_attempt(models.Model):
+    period_variants = (
+        ('per_day', 'раз в день'),
+        ('per_week', 'раз в неделю'),
+        ('per_month', 'раз в месяц')
+    )
+    status_variants = (
+        ('created', 'создана'),
+        ('executing', 'запущена'),
+        ('finished', 'закончена успешно'),
+        ('error', 'законечена с ошибками')
+    )
+
     mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE)
     last_attempt = models.DateTimeField(auto_now_add=True, verbose_name='дата и время последней попытки')
-    status = models.BooleanField(default=False, verbose_name='статус попытки')
-    mail_response = models.CharField(max_length=50, verbose_name='ответ почтового сервера')
+    status = models.CharField(choices=status_variants, default='created', verbose_name='статус попытки')
+    mail_response = models.CharField(max_length=50,choices=period_variants, default='per_day',
+                                     verbose_name='ответ почтового сервера')
 
     class Meta:
         verbose_name = 'Попытка рассылки'
