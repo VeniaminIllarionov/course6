@@ -24,7 +24,7 @@ class UserCreateView(CreateView):
         user.token = token
         user.save(update_fields=['token', 'is_active'])
         host = self.request.get_host()
-        url = f'https://{host}/users1/email_confirm/{token}/'
+        url = f'https://{host}/users/email_confirm/{token}/'
         send_mail(
             subject='Подтверждение почты',
             message=f'Подтвердите вашу регистрацию перейдя по ссылке {url}',

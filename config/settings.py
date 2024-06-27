@@ -23,7 +23,7 @@ load_dotenv(BASE_DIR / '.env')
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^%svpved&9^gsyncq8dq*9e_rib#9p+z^2f6xvmtoh-633^x+b'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -151,10 +151,10 @@ LOGOUT_REDIRECT_URL = '/'
 
 CACHE_ENABLED = os.getenv('CACHE_ENABLED') == 'True'
 
-#if CACHE_ENABLED:
-    #CACHES = {
-        #"default": {
-           # "BACKEND": "django.core.cache.backends.redis.RedisCache",
-           # "LOCATION": os.getenv('CACHE_LOCATION'),
-       # }
-   # }
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": os.getenv('CACHE_LOCATION'),
+        }
+    }
