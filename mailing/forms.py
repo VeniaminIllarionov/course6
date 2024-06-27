@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import BooleanField
 
-from mailing.models import Mailing, Massage
+from mailing.models import Mailing, Massage, Customers, Mailing_attempt
 
 
 class StyleFormMixin(forms.ModelForm):
@@ -34,4 +34,13 @@ class MassageForm(StyleFormMixin, forms.ModelForm):
         fields = '__all__'
 
 
+class CustomersForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = Customers
+        fields = '__all__'
 
+
+class Mailing_attemptForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = Mailing_attempt
+        exclude = ('mail_response',)

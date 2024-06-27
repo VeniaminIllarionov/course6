@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from mailing.forms import MailingForm, MassageForm, MailingManagerForm
+from mailing.forms import MailingForm, MassageForm, MailingManagerForm, CustomersForm, Mailing_attemptForm
 from mailing.models import Mailing, Customers, Massage, Mailing_attempt
 from mailing.services import get_qs_from_cache
 
@@ -29,10 +29,17 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         MassageFormset = inlineformset_factory(Mailing, Massage, form=MassageForm, extra=1)
+        CustomersFormset = inlineformset_factory(Mailing, Customers, form=CustomersForm, extra=1)
+        Mailing_attemptFormset = inlineformset_factory(Mailing, Mailing_attempt, form=Mailing_attemptForm, extra=1)
         if self.request.method == 'POST':
-            context_data['formset'] = MassageFormset(self.request.POST)
+            context_data['formset'] = (MassageFormset(self.request.POST) and CustomersFormset(self.request.POST)
+                                       and Mailing_attemptFormset(self.request.POST))
+            #context_data['formset'] = CustomersFormset(self.request.POST)
+            #context_data['formset'] = Mailing_attemptFormset(self.request.POST)
         else:
-            context_data['formset'] = MassageFormset()
+            context_data['formset'] = MassageFormset() and CustomersFormset() and Mailing_attemptFormset()
+            #context_data['formset'] = CustomersFormset()
+            #context_data['formset'] = Mailing_attemptFormset()
         return context_data
 
     def form_valid(self, form):
@@ -56,7 +63,6 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('mailing:home')
     login_url = "users:login"
     redirect_field_name = "redirect_to"
-
 
     def get_form_class(self):
         user = self.request.user

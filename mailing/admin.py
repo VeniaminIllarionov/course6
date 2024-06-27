@@ -21,7 +21,7 @@ class MassageAdmin(admin.ModelAdmin):
 
 @admin.register(Mailing_attempt)
 class Mailing_attemptAdmin(admin.ModelAdmin):
-    list_display = ('last_attempt', 'status', 'mail_response',)
+    list_display = ('last_attempt', 'status',)
     list_filter = ('status',)
     search_fields = ('status',)
 

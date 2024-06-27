@@ -18,9 +18,9 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h3 class="card-text">{{ object }}</h3>
-                        <p class="card-text">Количество рассылок всего: {{ len(object) }}</p>
-                        <p class="card-text">Количество активных рассылок: {{ len(object.mailing_status) }}</p>
-                        <p class="card-text">Количество уникальных клиентов для рассылок: {{ len(customers) }}</p>
+                        <p class="card-text">Количество рассылок всего: {{ object }}</p>
+                        <p class="card-text">Количество активных рассылок: {{ object.mailing_status }}</p>
+                        <p class="card-text">Количество уникальных клиентов для рассылок: {{ customers}}</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
                                 <a class="btn btn-primary" href="{% url 'mailing:mailing_detail' object.pk %}"
