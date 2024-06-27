@@ -30,16 +30,12 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
         context_data = super().get_context_data(**kwargs)
         MassageFormset = inlineformset_factory(Mailing, Massage, form=MassageForm, extra=1)
         CustomersFormset = inlineformset_factory(Mailing, Customers, form=CustomersForm, extra=1)
-        Mailing_attemptFormset = inlineformset_factory(Mailing, Mailing_attempt, form=Mailing_attemptForm, extra=1)
         if self.request.method == 'POST':
-            context_data['formset'] = (MassageFormset(self.request.POST) and CustomersFormset(self.request.POST)
-                                       and Mailing_attemptFormset(self.request.POST))
-            #context_data['formset'] = CustomersFormset(self.request.POST)
-            #context_data['formset'] = Mailing_attemptFormset(self.request.POST)
+            context_data['formset'] = MassageFormset(self.request.POST)
         else:
-            context_data['formset'] = MassageFormset() and CustomersFormset() and Mailing_attemptFormset()
-            #context_data['formset'] = CustomersFormset()
-            #context_data['formset'] = Mailing_attemptFormset()
+            context_data['formset'] = MassageFormset()
+            # context_data['formset'] = CustomersFormset()
+            # context_data['formset'] = Mailing_attemptFormset()
         return context_data
 
     def form_valid(self, form):
@@ -95,5 +91,13 @@ class MailingDeleteView(LoginRequiredMixin, DeleteView):
 class MailingDetailView(LoginRequiredMixin, DetailView):
     model = Mailing
     template_name = 'mailing/mailing_detail.html'
+    login_url = "users:login"
+    redirect_field_name = "redirect_to"
+
+
+class CustomersCreateView(LoginRequiredMixin, CreateView):
+    model = Customers
+    form_class = CustomersForm
+    success_url = reverse_lazy('mailing:home')
     login_url = "users:login"
     redirect_field_name = "redirect_to"

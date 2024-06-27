@@ -2,7 +2,7 @@
 {% load my_tags %}
 {% block content %}
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-    <h1 class="display-4">CHEstore</h1>
+    <h1 class="display-4">Рассылка</h1>
     <p class="lead">Рассылка - это отличный вариант для уведомления ваших пользователей</p>
 </div>
 
@@ -10,6 +10,7 @@
     <div class="container">
         <div class="col-12 mb-5">
             <a class="btn btn-primary" href="{% url 'mailing:create'%}" role="button">Создать Рассылку</a>
+            <a class="btn btn-primary" href="{% url 'mailing:create_custom'%}" role="button">Добавить клиента</a>
         </div>
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             {% for object in object_list %}
