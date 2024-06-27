@@ -12,7 +12,8 @@ class Mailing(models.Model):
     )
 
     send_mailing_at = models.DateTimeField(auto_now_add=True, verbose_name='дата и время первой отправки рассылки')
-    frequency = models.CharField(max_length=50, choices=period_variants, default='per_day', verbose_name='периодичность')
+    frequency = models.CharField(max_length=50, choices=period_variants, default='per_day',
+                                 verbose_name='периодичность')
     mailing_status = models.CharField(max_length=80, verbose_name='статус рассылки')
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, verbose_name='Пользователь', null=True, blank=True)

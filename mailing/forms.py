@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import BooleanField
 
-from mailing.models import Mailing, Massage, Customers, Mailing_attempt
+from mailing.models import Mailing, Massage, Customers
 
 
 class StyleFormMixin(forms.ModelForm):

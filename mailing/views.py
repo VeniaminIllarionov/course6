@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from mailing.forms import MailingForm, MassageForm, MailingManagerForm, CustomersForm, Mailing_attemptForm
+from mailing.forms import MailingForm, MassageForm, MailingManagerForm, CustomersForm
 from mailing.models import Mailing, Customers, Massage, Mailing_attempt
 from mailing.services import get_qs_from_cache
 
