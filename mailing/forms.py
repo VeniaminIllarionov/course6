@@ -39,8 +39,3 @@ class CustomersForm(StyleFormMixin, forms.ModelForm):
         model = Customers
         fields = '__all__'
 
-
-class Mailing_attemptForm(StyleFormMixin, forms.ModelForm):
-    class Meta:
-        model = Mailing_attempt
-        exclude = ('mail_response',)
