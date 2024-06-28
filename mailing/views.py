@@ -1,8 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-
+from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.forms import inlineformset_factory
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
@@ -43,27 +43,22 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         MassageFormset = inlineformset_factory(Mailing, Massage, form=MassageForm, extra=1)
-        CustomersFormset = inlineformset_factory(Mailing, Customers, form=CustomersForm, extra=1)
         if self.request.method == 'POST':
             context_data['formset'] = MassageFormset(self.request.POST)
         else:
             context_data['formset'] = MassageFormset()
-            # context_data['formset'] = CustomersFormset()
-            # context_data['formset'] = Mailing_attemptFormset()
         return context_data
 
     def form_valid(self, form):
-        context = self.get_context_data()
-        formset = context['formset']
+        formset = self.get_context_data()['formset']
+        mailing_template = form.save()
         self.object = form.save()
-        user = self.request.user
-        self.object.owner = user
-        self.object.save()
+        self.object.owner = self.request.user
+        mailing_template.owner = self.object.owner
         if formset.is_valid():
             formset.instance = self.object
             formset.save()
-        else:
-            return self.form_invalid(form)
+            mailing_template.save()
         return super().form_valid(form)
 
 
@@ -73,6 +68,27 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('mailing:home')
     login_url = "users:login"
     redirect_field_name = "redirect_to"
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        MassageFormset = inlineformset_factory(Mailing, Massage, form=MassageForm, extra=1)
+        if self.request.method == 'POST':
+            context_data['formset'] = MassageFormset(self.request.POST, instance=self.object)
+        else:
+            context_data['formset'] = MassageFormset(instance=self.object)
+        return context_data
+
+    def form_valid(self, form):
+        formset = self.get_context_data()['formset']
+        mailing_template = form.save()
+        self.object = form.save()
+        self.object.owner = self.request.user
+        mailing_template.owner = self.object.owner
+        if formset.is_valid():
+            formset.instance = self.object
+            formset.save()
+            mailing_template.save()
+        return super().form_valid(form)
 
     def get_form_class(self):
         user = self.request.user
@@ -89,6 +105,16 @@ class MailingDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('mailing:home')
     login_url = "users:login"
     redirect_field_name = "redirect_to"
+
+
+#def settings_toggle_active(request, pk):
+    #mailing_item = get_object_or_404(Mailing_attempt, pk=pk)
+    #if mailing_item.is_active is True:
+       # mailing_item.is_active = False
+    #else:
+       # mailing_item.is_active = True
+    #mailing_item.save()
+   # return redirect(reverse('mailing:home'))
 
 
 class MailingDetailView(LoginRequiredMixin, DetailView):
@@ -143,3 +169,17 @@ class CustomersUpdateView(LoginRequiredMixin, UpdateView):
         else:
             return self.form_invalid(form)
         return super().form_valid(form)
+
+
+class CustomersDeleteView(LoginRequiredMixin, DeleteView):
+    model = Customers
+    success_url = reverse_lazy('mailing:home')
+    login_url = "users:login"
+    redirect_field_name = "redirect_to"
+
+
+class CustomersDetailView(ListView):
+    model = Customers
+    template_name = 'mailing/home_custom.html'
+    login_url = "users:login"
+    redirect_field_name = "redirect_to"

@@ -32,6 +32,7 @@ class Customers(models.Model):
     email = models.EmailField(unique=True, verbose_name='Почта')
     fio = models.CharField(max_length=50, verbose_name='ФИО')
     comment = models.TextField(blank=True, verbose_name='Коммент')
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, verbose_name='Пользователь', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Клиент'
@@ -45,6 +46,7 @@ class Massage(models.Model):
     mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE)
     subject_massage = models.CharField(max_length=80, verbose_name='Тема письма')
     massage = models.TextField(verbose_name='Текст письма')
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, verbose_name='Пользователь', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Сообщение'
