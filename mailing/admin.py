@@ -14,14 +14,14 @@ class MailingAdmin(admin.ModelAdmin):
 
 @admin.register(Massage)
 class MassageAdmin(admin.ModelAdmin):
-    list_display = ('subject_massage', 'massage',)
+    list_display = ('subject_massage', 'massage', )
     list_filter = ('subject_massage',)
     search_fields = ('subject_massage', 'massage',)
 
 
 @admin.register(Mailing_attempt)
 class Mailing_attemptAdmin(admin.ModelAdmin):
-    list_display = ('last_attempt', 'status',)
+    list_display = ('last_attempt', 'status', 'is_active',)
     list_filter = ('status',)
     search_fields = ('status',)
 
@@ -34,7 +34,7 @@ class CustomersAdmin(admin.ModelAdmin):
 
 
 @admin.register(User)
-class VersionAdmin(admin.ModelAdmin):
-    list_display = ('email', 'phone', 'country')
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('email', 'phone', 'country', 'is_block',)
     list_filter = ('email',)
     search_fields = ('email',)

@@ -76,7 +76,7 @@ class Mailing_attempt(models.Model):
         verbose_name = 'Попытка рассылки'
         verbose_name_plural = 'Попытки рассылок'
         permissions = [
-            ('can_edit_is_active', 'Может отключать рассылки.'), ]
+            ('change_is_active', 'Может отключать рассылки.'), ]
 
     def __str__(self):
         return f'{self.last_attempt} - {self.status} - {self.mail_response}'

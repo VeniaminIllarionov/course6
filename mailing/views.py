@@ -160,14 +160,15 @@ class CustomersUpdateView(LoginRequiredMixin, UpdateView):
         raise PermissionDenied
 
     def form_valid(self, form):
-        context = self.get_context_data()
-        formset = context['formset']
+        formset = self.get_context_data()['formset']
+        customers_template = form.save()
         self.object = form.save()
+        self.object.owner = self.request.user
+        customers_template.owner = self.object.owner
         if formset.is_valid():
             formset.instance = self.object
             formset.save()
-        else:
-            return self.form_invalid(form)
+            customers_template.save()
         return super().form_valid(form)
 
 
@@ -178,7 +179,7 @@ class CustomersDeleteView(LoginRequiredMixin, DeleteView):
     redirect_field_name = "redirect_to"
 
 
-class CustomersDetailView(ListView):
+class CustomersDetailView(DetailView):
     model = Customers
     template_name = 'mailing/home_custom.html'
     login_url = "users:login"

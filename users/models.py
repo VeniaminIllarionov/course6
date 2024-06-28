@@ -16,14 +16,18 @@ class User(AbstractUser):
                                null=True, help_text='Введите страну')
     token = models.CharField(max_length=100, verbose_name='Токен', blank=True, null=True, )
 
+    is_block = models.BooleanField(default=False, verbose_name='Блокировка пользователя')
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-        permissions = [('view_users', 'Может просматривать список пользователей сервиса.'),
-                       ('can_edit_is_active', 'Может блокировать пользователей сервиса.')]
+        permissions = [
+            ('view_users', 'Может просматривать список пользователей сервиса.'),
+                       ('change_is_block', 'Может блокировать пользователей сервиса.')
+                       ]
 
     def __str__(self):
         return f'{self.email}'
