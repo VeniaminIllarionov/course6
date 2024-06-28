@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from mailing.forms import MailingForm, MassageForm, MailingManagerForm, CustomersForm
+from mailing.forms import MailingForm, MassageForm, MailingManagerForm, CustomersForm, CustomersManagerForm
 from mailing.models import Mailing, Customers, Massage, Mailing_attempt
 from mailing.services import get_qs_from_cache
 
@@ -101,3 +101,31 @@ class CustomersCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('mailing:home')
     login_url = "users:login"
     redirect_field_name = "redirect_to"
+
+
+class CustomersUpdateView(LoginRequiredMixin, UpdateView):
+    model = Customers
+    form_class = CustomersForm
+    success_url = reverse_lazy('mailing:home')
+    login_url = "users:login"
+    redirect_field_name = "redirect_to"
+
+    def get_form_class(self):
+        user = self.request.user
+        if user == self.object.owner:
+            return CustomersForm
+        if user.has_perm('mailing.set_published') and user.has_perm('mailing.can_edit_description') and user.has_perm(
+                'mailing.can_edit_category'):
+            return CustomersManagerForm
+        raise PermissionDenied
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        self.object = form.save()
+        if formset.is_valid():
+            formset.instance = self.object
+            formset.save()
+        else:
+            return self.form_invalid(form)
+        return super().form_valid(form)

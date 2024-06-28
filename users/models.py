@@ -4,7 +4,9 @@ from django.db import models
 
 # Create your models here.
 class User(AbstractUser):
-    username = models.EmailField(unique=True, verbose_name='Почта')
+    username = None
+
+    email = models.EmailField(unique=True, verbose_name='Почта')
 
     avatar = models.ImageField(upload_to='users/', verbose_name='Аватар', blank=True, null=True,
                                help_text='Загрузите свой аватар')
@@ -14,7 +16,7 @@ class User(AbstractUser):
                                null=True, help_text='Введите страну')
     token = models.CharField(max_length=100, verbose_name='Токен', blank=True, null=True, )
 
-
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     class Meta:

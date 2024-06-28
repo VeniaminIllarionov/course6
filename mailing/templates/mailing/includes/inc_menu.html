@@ -2,11 +2,16 @@
     <h5 class="my-0 mr-md-auto font-weight-normal">Рассылка</h5>
     <nav class="ms-5">
         <a class="p-2 btn btn-outline-primary" href="{% url 'mailing:home' %}">Рассылки</a>
+    </nav>
+    <nav class="ms-20">
         {% if user.is_authenticated %}
-        <a class="p-2 btn btn-outline-primary" href="{% url 'users:logout' %}">Выйти</a>
+            <form method="post" action="{% url 'users:logout' %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-primary" type="submit">Выйти</button>
+            </form>
         {% else %}
-        <a class="p-2 btn btn-outline-primary" href="{% url 'users:login' %}">Вход</a>
-        <a class="p-2 btn btn-outline-primary" href="{% url 'users:register' %}">Зарегестрироваться</a>
+            <a class="btn btn-outline-primary" href="{% url 'users:login' %}">Войти</a>
+            <a class="p-2 btn btn-outline-primary" href="{% url 'users:register' %}">Зарегестрироваться</a>
         {% endif %}
     </nav>
 </div>

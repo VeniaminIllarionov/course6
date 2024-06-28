@@ -39,3 +39,8 @@ class CustomersForm(StyleFormMixin, forms.ModelForm):
         model = Customers
         fields = '__all__'
 
+
+class CustomersManagerForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = Customers
+        fields = '__all__'
