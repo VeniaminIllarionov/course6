@@ -49,6 +49,8 @@ class Massage(models.Model):
     class Meta:
         verbose_name = 'Сообщение'
         verbose_name_plural = 'Сообщения'
+        permissions = [
+            ('view_mailing', 'Может просматривать любые рассылки.')]
 
     def __str__(self):
         return f'{self.subject_massage} - {self.massage}'
@@ -66,10 +68,13 @@ class Mailing_attempt(models.Model):
     last_attempt = models.DateTimeField(auto_now_add=True, verbose_name='дата и время последней попытки')
     status = models.CharField(choices=status_variants, default='created', verbose_name='статус попытки')
     mail_response = models.CharField(max_length=50, verbose_name='ответ почтового сервера')
+    is_active = models.BooleanField(default=True, verbose_name='Статус Рассылки')
 
     class Meta:
         verbose_name = 'Попытка рассылки'
         verbose_name_plural = 'Попытки рассылок'
+        permissions = [
+            ('can_edit_is_active', 'Может отключать рассылки.'), ]
 
     def __str__(self):
         return f'{self.last_attempt} - {self.status} - {self.mail_response}'

@@ -18,6 +18,20 @@ class MailingListView(ListView):
     def get_queryset(self):
         return get_qs_from_cache(qs=Mailing.objects.all(), key='mailings_list')
 
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        self.object = form.save()
+        user = self.request.user
+        self.object.owner = user
+        self.object.save()
+        if formset.is_valid():
+            formset.instance = self.object
+            formset.save()
+        else:
+            return self.form_invalid(form)
+        return super().form_valid(form)
+
 
 class MailingCreateView(LoginRequiredMixin, CreateView):
     model = Mailing
@@ -64,21 +78,10 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
         user = self.request.user
         if user == self.object.owner:
             return MailingForm
-        if user.has_perm('mailing.set_published') and user.has_perm('mailing.can_edit_description') and user.has_perm(
-                'mailing.can_edit_category'):
+        if user.has_perm('mailing.view_mailing') and user.has_perm('mailing.can_edit_is_active') and user.has_perm(
+                'users.view_users') and user.has_perm('users.can_edit_is_active'):
             return MailingManagerForm
         raise PermissionDenied
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        formset = context['formset']
-        self.object = form.save()
-        if formset.is_valid():
-            formset.instance = self.object
-            formset.save()
-        else:
-            return self.form_invalid(form)
-        return super().form_valid(form)
 
 
 class MailingDeleteView(LoginRequiredMixin, DeleteView):
@@ -102,6 +105,17 @@ class CustomersCreateView(LoginRequiredMixin, CreateView):
     login_url = "users:login"
     redirect_field_name = "redirect_to"
 
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        self.object = form.save()
+        if formset.is_valid():
+            formset.instance = self.object
+            formset.save()
+        else:
+            return self.form_invalid(form)
+        return super().form_valid(form)
+
 
 class CustomersUpdateView(LoginRequiredMixin, UpdateView):
     model = Customers
@@ -114,8 +128,8 @@ class CustomersUpdateView(LoginRequiredMixin, UpdateView):
         user = self.request.user
         if user == self.object.owner:
             return CustomersForm
-        if user.has_perm('mailing.set_published') and user.has_perm('mailing.can_edit_description') and user.has_perm(
-                'mailing.can_edit_category'):
+        if user.has_perm('mailing.view_mailing') and user.has_perm('mailing.can_edit_is_active') and user.has_perm(
+                'users.view_users') and user.has_perm('users.can_edit_is_active'):
             return CustomersManagerForm
         raise PermissionDenied
 
