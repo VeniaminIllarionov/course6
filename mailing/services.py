@@ -26,7 +26,6 @@ def my_job():
     day = timedelta(days=1)
     week = timedelta(days=7)
     month = timedelta(days=31)
-
     zone = pytz.timezone(settings.TIME_ZONE)
     today = datetime.now(zone)
     mailings = Mailing.objects.all().filter(is_active=True)
@@ -67,7 +66,7 @@ def my_job():
                     mailing.status = 'finished'
 
             mailing.save()
-            print(f'Рассылка {mailing.mailing_name} отправлена {today} (должна была {mailing.next_date})')
+            print(f'Рассылка {mailing.id} отправлена {today} (должна была {mailing.next_date})')
 
 
 def get_cache_mailing_active():
