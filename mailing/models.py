@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from django.db import models, connection
 
 from users.models import User
@@ -18,7 +20,8 @@ class Mailing(models.Model):
         ('error', 'законечена с ошибками')
     )
 
-    send_mailing_at = models.DateTimeField(auto_now_add=True, verbose_name='дата и время первой отправки рассылки')
+    start_time = models.DateTimeField(default=timezone.now, verbose_name='Начало рассылки')
+    end_time = models.DateTimeField(default=timezone.now, null=True, blank=True, verbose_name='Конец рассылки')
     frequency = models.CharField(max_length=50, choices=period_variants, default='per_day',
                                  verbose_name='периодичность')
     mailing_status = models.CharField(max_length=80, choices=status_variants, default='created',

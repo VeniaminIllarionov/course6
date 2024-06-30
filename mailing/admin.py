@@ -7,7 +7,7 @@ from users.models import User
 # Register your models here.
 @admin.register(Mailing)
 class MailingAdmin(admin.ModelAdmin):
-    list_display = ('send_mailing_at', 'frequency', 'mailing_status',)
+    list_display = ('start_time', 'end_time', 'frequency', 'mailing_status',)
     list_filter = ('mailing_status',)
     search_fields = ('mailing_status',)
 
