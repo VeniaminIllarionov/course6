@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from mailing.forms import MailingForm, MassageForm, MailingManagerForm, CustomersForm, CustomersManagerForm
+from mailing.forms import MailingForm, MassageForm, CustomersForm
 from mailing.models import Mailing, Customers, Massage, Mailing_attempt
 from mailing.services import get_qs_from_cache
 
@@ -17,6 +17,7 @@ class MailingListView(ListView):
 
     def get_queryset(self):
         return get_qs_from_cache(qs=Mailing.objects.all(), key='mailings_list')
+
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -90,14 +91,6 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
             mailing_template.save()
         return super().form_valid(form)
 
-    def get_form_class(self):
-        user = self.request.user
-        if user == self.object.owner:
-            return MailingForm
-        if user.has_perm('mailing.view_mailing') and user.has_perm('mailing.can_edit_is_active') and user.has_perm(
-                'users.view_users') and user.has_perm('users.can_edit_is_active'):
-            return MailingManagerForm
-        raise PermissionDenied
 
 
 class MailingDeleteView(LoginRequiredMixin, DeleteView):
@@ -107,14 +100,14 @@ class MailingDeleteView(LoginRequiredMixin, DeleteView):
     redirect_field_name = "redirect_to"
 
 
-#def settings_toggle_active(request, pk):
-    #mailing_item = get_object_or_404(Mailing_attempt, pk=pk)
-    #if mailing_item.is_active is True:
-       # mailing_item.is_active = False
-    #else:
-       # mailing_item.is_active = True
-    #mailing_item.save()
-   # return redirect(reverse('mailing:home'))
+# def settings_toggle_active(request, pk):
+# mailing_item = get_object_or_404(Mailing_attempt, pk=pk)
+# if mailing_item.is_active is True:
+# mailing_item.is_active = False
+# else:
+# mailing_item.is_active = True
+# mailing_item.save()
+# return redirect(reverse('mailing:home'))
 
 
 class MailingDetailView(LoginRequiredMixin, DetailView):
@@ -122,6 +115,8 @@ class MailingDetailView(LoginRequiredMixin, DetailView):
     template_name = 'mailing/mailing_detail.html'
     login_url = "users:login"
     redirect_field_name = "redirect_to"
+
+
 
 
 class CustomersCreateView(LoginRequiredMixin, CreateView):
@@ -181,6 +176,6 @@ class CustomersDeleteView(LoginRequiredMixin, DeleteView):
 
 class CustomersDetailView(DetailView):
     model = Customers
-    template_name = 'mailing/home_custom.html'
+    template_name = 'mailing/customers_detail.html'
     login_url = "users:login"
     redirect_field_name = "redirect_to"

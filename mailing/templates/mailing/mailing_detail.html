@@ -2,17 +2,33 @@
 {% load my_tags %}
 {% block content %}
 
-<div class="album py-5 bg-body-tertiary">
-    <div class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        <div class="col">
-          <div class="card shadow-sm">
-              <div class="card-body">
-              <p class="card-text">{{ mailing }}</p>
-            </div>
-          </div>
+    {% if user.is_block %}
+        <div class="col-12 text-center">
+            <h1>
+                Ваш аккаунт заблокирован!
+            </h1>
+           <form method="post" action="{% url 'users:logout' %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-primary" type="submit">Выйти</button>
+            </form>
         </div>
-      </div>
+    {% else %}
+    
+    <div class="album py-5 bg-body-tertiary">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <p class="card-text">Дата первой отправки: {{ mailing.send_mailing_at }}</p>
+                            <p class="card-text">Переодичность: {{ mailing.frequency }}</p>
+                            <p class="card-text">Cтатус рассылки: {{ mailing.mailing_status }}</p>
+                            <p class="card-text">Создано: {{ mailing.owner }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+    {% endif %}
 {% endblock %}

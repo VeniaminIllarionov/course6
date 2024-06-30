@@ -1,0 +1,33 @@
+{% extends 'mailing/home.html' %}
+{% load static %}
+{% load user_tags %}
+
+{% block content %}
+{% if user.is_blocked %}
+<div class="col-12 text-center">
+    <h1>
+        Ваш аккаунт заблокирован!
+    </h1>
+    <a class="p-2 btn btn-outline-primary" href="{% url 'users:logout' %}">Выйти</a>
+</div>
+{% else %}
+<div class="row">
+    <div class="col-2 mx-auto">
+        <div class="card mx-auto" style="width: 18rem;">
+            <div class="card-body mx-20">
+                <form method="post" enctype="multipart/form-data"></form>
+                <h5 class="card-title">{% if object.first_name != '' and object.last_name != '' %} {{object.first_name}} {{object.last_name}} {% else %} {{object.email}} {% endif %}</h5>
+                <img src="{{object.image | media_filter }}" >
+                <p class="card-text">Дата регистрации: {{object.date_joined}}</p>
+                <p class="card-text">Последний вход: {{object.last_login}}</p>
+                <p class="card-text">Подтверждён: {{object.is_verified}}</p>
+                <p class="card-text">Менеджер: {{object.is_staff}}</p>
+                <p class="card-text">Администратор: {{object.is_superuser}}</p>
+                <p class="card-text">Заблокирован: {{object.is_block}}</p>
+                <a href="{% url 'users:manager_users' %}" class="btn btn-md btn-outline-primary mx-auto">Назад</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

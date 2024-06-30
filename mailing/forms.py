@@ -24,11 +24,6 @@ class MailingForm(StyleFormMixin, forms.ModelForm):
         exclude = ('mailing_status',)
 
 
-class MailingManagerForm(StyleFormMixin, forms.ModelForm):
-    class Meta:
-        model = Mailing
-        fields = ('frequency',)
-
     def clean_name(self):
         cleaned_data = self.cleaned_data.get('subject_massage', 'massage')
 
@@ -63,14 +58,3 @@ class CustomersForm(StyleFormMixin, forms.ModelForm):
         return cleaned_data
 
 
-class CustomersManagerForm(StyleFormMixin, forms.ModelForm):
-    class Meta:
-        model = Customers
-        fields = '__all__'
-
-    def clean_name(self):
-        cleaned_data = self.cleaned_data.get('comment', 'fio')
-
-        if cleaned_data in words:
-            raise forms.ValidationError('Возникла ошибка ')
-        return cleaned_data

@@ -3,9 +3,11 @@ import secrets
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.views import PasswordResetView
 from django.core.mail import send_mail
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView, ListView, DetailView
 
 from config.settings import EMAIL_HOST_USER
 from users.forms import UserRegisterForm
@@ -60,3 +62,28 @@ class GeneratePasswordView(PasswordResetView):
                     recipient_list=[user.email],
                 )
             return redirect(reverse("users:login"))
+
+
+class UsersView(ListView):
+    model = User
+    template_name = 'users/user_list.html'
+    context_object_name = 'objects_list'
+
+
+class UsersDetail(DetailView):
+    model = User
+    template_name = 'users/user_detail.html'
+    context_object_name = 'objects_list'
+
+
+def block_user(request, pk):
+    user_item = get_object_or_404(User, pk=pk)
+    if request.user.is_staff and user_item.is_superuser:
+        rendered = render_to_string('users/403_forbiden.html')
+        return HttpResponse(rendered, status=403)
+    if user_item.is_block:
+        user_item.is_block = False
+    else:
+        user_item.is_block = True
+    user_item.save()
+    return redirect(reverse('users:manager_users'))

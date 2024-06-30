@@ -1,0 +1,13 @@
+{% extends 'mailing/home.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="col-12 text-center">
+    <h1>
+        Доступ к странице заблокирован
+    </h1>
+    <a class="p-2 btn btn-outline-primary" href="{% url 'mailing:home' %}">На главную</a>
+</div>
+
+{% endblock %}

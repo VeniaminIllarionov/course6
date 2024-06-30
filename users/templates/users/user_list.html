@@ -1,0 +1,63 @@
+
+{% extends 'mailing/home.html' %}
+{% load static %}
+
+{% block content %}
+
+{% if user.is_blocked %}
+<div class="col-12 text-center">
+    <h1>
+        Ваш аккаунт заблокирован!
+    </h1>
+    <a class="p-2 btn btn-outline-primary" href="{% url 'users:logout' %}">Выйти</a>
+</div>
+{% else %}
+
+<main>
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">Рассылки</h1>
+                <p class="lead text-body-secondary">Личный кабинет менеджера</p>
+            </div>
+        </div>
+    </section>
+
+    <h1 class="fw-light text-center mb-3">Просмотр пользователей</h1>
+
+    <div class="album py-5 bg-body-tertiary">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row    -cols-md-3 g-3">
+                {% for object in objects_list %}
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h1 class="card-title pricing-card-title">{% if object.first_name != '' and object.last_name != '' %} {{object.first_name}} {{object.last_name}} {% else %} {{object.email}} {% endif %}</h1>
+                            <p class="card-text">Дата регистрации: {{object.date_joined}}</p>
+                            <p class="card-text">Последний вход: {{object.last_login}}</p>
+                            <p class="card-text">Подтверждён: {{object.is_verified}}</p>
+                            <p class="card-text">Менеджер: {{object.is_staff}}</p>
+                            <p class="card-text">Администратор: {{object.is_superuser}}</p>
+                            <p class="card-text">Заблокирован: {{object.is_block}}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a href="{% url 'users:manager_users_detail' object.pk%}" class="btn btn-sm btn-outline-secondary">Просмотр</a>
+                                    {% if object.is_block %}
+                                    <a href="{% url 'users:manager_users_block' object.pk %}" class="btn btn-sm btn-outline-success">Разблокировать</a>
+                                    {% else %}
+                                    <a href="{% url 'users:manager_users_block' object.pk %}" class="btn btn-sm btn-outline-danger" id="liveSUAlert">Заблокировать</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</main>
+{% endif %}
+{% endblock %}

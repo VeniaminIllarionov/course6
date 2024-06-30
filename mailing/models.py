@@ -11,10 +11,18 @@ class Mailing(models.Model):
         ('per_month', 'раз в месяц')
     )
 
+    status_variants = (
+        ('created', 'создана'),
+        ('executing', 'запущена'),
+        ('finished', 'закончена успешно'),
+        ('error', 'законечена с ошибками')
+    )
+
     send_mailing_at = models.DateTimeField(auto_now_add=True, verbose_name='дата и время первой отправки рассылки')
     frequency = models.CharField(max_length=50, choices=period_variants, default='per_day',
                                  verbose_name='периодичность')
-    mailing_status = models.CharField(max_length=80, verbose_name='статус рассылки')
+    mailing_status = models.CharField(max_length=80, choices=status_variants, default='created',
+                                      verbose_name='статус рассылки')
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, verbose_name='Пользователь', null=True, blank=True)
 
@@ -60,15 +68,13 @@ class Massage(models.Model):
 
 class Mailing_attempt(models.Model):
     status_variants = (
-        ('created', 'создана'),
-        ('executing', 'запущена'),
-        ('finished', 'закончена успешно'),
-        ('error', 'законечена с ошибками')
+        ('successfully', 'успешно'),
+        ('not_successful', 'не успешно'),
     )
 
     mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE)
     last_attempt = models.DateTimeField(auto_now_add=True, verbose_name='дата и время последней попытки')
-    status = models.CharField(choices=status_variants, default='created', verbose_name='статус попытки')
+    status = models.CharField(choices=status_variants, default=None, verbose_name='статус попытки')
     mail_response = models.CharField(max_length=50, verbose_name='ответ почтового сервера')
     is_active = models.BooleanField(default=True, verbose_name='Статус Рассылки')
 
