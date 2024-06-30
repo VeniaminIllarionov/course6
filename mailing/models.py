@@ -22,6 +22,8 @@ class Mailing(models.Model):
 
     start_time = models.DateTimeField(default=timezone.now, verbose_name='Начало рассылки')
     end_time = models.DateTimeField(default=timezone.now, null=True, blank=True, verbose_name='Конец рассылки')
+    next_day = models.DateTimeField(default=timezone.now, null=True, blank=True,
+                                    verbose_name='Следующая отправка рассылки')
     frequency = models.CharField(max_length=50, choices=period_variants, default='per_day',
                                  verbose_name='периодичность')
     mailing_status = models.CharField(max_length=80, choices=status_variants, default='created',
