@@ -35,7 +35,7 @@ def my_job():
         if mailing.status != 'finished':
             mailing.status = 'executing'
             mailing.save()
-            emails_list = [client.email for client in mailing.client.all()]
+            emails_list = [client.email for client in mailing.customers.all()]
 
             print(f'Рассылка {mailing.id} - начало {mailing.start_time}; конец {mailing.end_time}')
 
@@ -44,6 +44,7 @@ def my_job():
                 message=Massage.massage,
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=emails_list
+
             )
             print('Пошла рассылка')
 
@@ -67,3 +68,41 @@ def my_job():
 
             mailing.save()
             print(f'Рассылка {mailing.mailing_name} отправлена {today} (должна была {mailing.next_date})')
+
+
+def get_cache_mailing_active():
+    if settings.CACHE_ENABLED:
+        key = 'mailing_quantity_active'
+        mailing_quantity_active = cache.get(key)
+        if mailing_quantity_active is None:
+            mailing_quantity_active = Mailing_attempt.objects.filter(is_active=True).count()
+            cache.set(key, mailing_quantity_active)
+    else:
+        mailing_quantity_active = Mailing_attempt.objects.filter(is_active=True).count()
+    return mailing_quantity_active
+
+
+def get_mailing_count_from_cache():
+    if settings.CACHE_ENABLED:
+        key = 'mailing_quantity'
+        mailing_quantity = cache.get(key)
+        if mailing_quantity is None:
+            mailing_quantity = Mailing_attempt.objects.all().count()
+            cache.set(key, mailing_quantity)
+    else:
+        mailing_quantity = Mailing_attempt.objects.all().count()
+
+    return mailing_quantity
+
+
+def get_cache_unique_quantity():
+    if settings.CACHE_ENABLED:
+        key = 'clients_unique_quantity'
+        clients_unique_quantity = cache.get(key)
+        if clients_unique_quantity is None:
+            clients_unique_quantity = len(list(set(Customers.objects.all())))
+            cache.set(key, clients_unique_quantity)
+    else:
+        clients_unique_quantity = len(list(set(Customers.objects.all())))
+
+    return clients_unique_quantity
