@@ -46,7 +46,8 @@ class Command(BaseCommand):
         # Обходим все значения категорий из фиктсуры для получения информации об одном объекте
         for mailing in Command.json_read_mailing():
             mailing_list.append(
-                {"id": mailing['pk'], "send_mailing_at": mailing['fields']['send_mailing_at'],
+                {"id": mailing['pk'], "start_time": mailing['fields']['start_time'],
+                 "end_time": mailing['fields']['end_time'], "next_day": mailing['fields']['next_day'],
                  "frequency": mailing['fields']['frequency'], "mailing_status": mailing['fields']['mailing_status']}
             )
         mailing_for_create = []

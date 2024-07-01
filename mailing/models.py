@@ -36,7 +36,7 @@ class Mailing(models.Model):
         verbose_name_plural = 'Рассылки'
 
     def __str__(self):
-        return f'{self.send_mailing_at} - {self.frequency} - {self.mailing_status}'
+        return f'{self.start_time} - {self.end_time} - {self.frequency} - {self.mailing_status}'
 
 
 class Customers(models.Model):

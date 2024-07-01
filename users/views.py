@@ -10,6 +10,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, ListView, DetailView
 
 from config.settings import EMAIL_HOST_USER
+from mailing.services import get_qs_from_cache
 from users.forms import UserRegisterForm
 from users.models import User
 
@@ -68,6 +69,9 @@ class UsersView(ListView):
     model = User
     template_name = 'users/user_list.html'
     context_object_name = 'objects_list'
+
+    def get_queryset(self):
+        return get_qs_from_cache(qs=User.objects.all(), key='users_list')
 
 
 class UsersDetail(DetailView):

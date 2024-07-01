@@ -53,11 +53,11 @@ def my_job():
             log.save()
 
             if mailing.frequency == 'per_day':
-                mailing.next_date = log.last_time_sending + day
+                mailing.next_date = log.last_attempt + day
             elif mailing.frequency == 'per_week':
-                mailing.next_date = log.last_time_sending + week
+                mailing.next_date = log.last_attempt + week
             elif mailing.frequency == 'per_month':
-                mailing.next_date = log.last_time_sending + month
+                mailing.next_date = log.last_attempt + month
 
             if status:  # на случай сбоя рассылки она останется активной
                 if mailing.next_date < mailing.end_time:
@@ -105,3 +105,16 @@ def get_cache_unique_quantity():
         clients_unique_quantity = len(list(set(Customers.objects.all())))
 
     return clients_unique_quantity
+
+
+def form_valid(self, form):
+    formset = self.get_context_data()['formset']
+    customers_template = form.save()
+    self.object = form.save()
+    self.object.owner = self.request.user
+    customers_template.owner = self.object.owner
+    if formset.is_valid():
+        formset.instance = self.object
+        formset.save()
+        customers_template.save()
+    return super().form_valid(form)
