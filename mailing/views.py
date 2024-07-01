@@ -7,7 +7,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from mailing.forms import MailingForm, MassageForm, CustomersForm
 from mailing.models import Mailing, Customers, Massage, Mailing_attempt
-from mailing.services import get_qs_from_cache
+from mailing.services import get_qs_from_cache, my_job
 
 
 class MailingListView(ListView):
@@ -128,6 +128,9 @@ class CustomersCreateView(LoginRequiredMixin, CreateView):
         customer.save()
         return super().form_valid(form)
 
+    def send_mail(self):
+        return my_job()
+
 
 class CustomersUpdateView(LoginRequiredMixin, UpdateView):
     model = Customers
@@ -142,6 +145,9 @@ class CustomersUpdateView(LoginRequiredMixin, UpdateView):
         customer.owner = user
         customer.save()
         return super().form_valid(form)
+
+    def send_mail(self):
+        return my_job()
 
 
 class CustomersDeleteView(LoginRequiredMixin, DeleteView):
