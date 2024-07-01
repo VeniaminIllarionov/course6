@@ -20,29 +20,26 @@
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
         <div class="col-12 mb-5">
-            <a class="btn btn-primary" href="{% url 'mailing:create'%}" role="button">Создать Рассылку</a>
-            <a class="btn btn-primary" href="{% url 'mailing:customers_list'%}" role="button">Подробнее о клиентах</a>
+            <a class="btn btn-primary" href="{% url 'mailing:create_custom'%}" role="button">Добавить клиента</a>
         </div>
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            {% for object in object_list %}
+            {% for object in customers_list %}
             <div class="col">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h3 class="card-text">Рассылка номер: {{ object.id }}</h3>
-                        <p class="card-text">Создал : {{ object.owner }}</p>
-                        <p class="card-text">Статус : {{ object.mailing_status }}</p>
+                        <p class="card-text">Пользователь: {{ object.fio }}</p>
+                        <p class="card-text">Почта: {{ object.email }}</p>
+                        <p class="card-text">Описание: {{ object.comment }}</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
-                                <a class="btn btn-primary" href="{% url 'mailing:mailing_detail' object.pk %}"
-                                   role="button">Подробнее о рассылке</a>
                                 <a class="btn btn-primary" href="{% url 'mailing:customers_detail' object.pk %}"
                                    role="button">Подробнее о клиентах</a>
                                 {% if perms.catalog.set_published and perms.catalog.can_edit_description and perms.catalog.can_edit_category or user == object.owner %}
-                                <a class="btn btn-warning" href="{% url 'mailing:edit' object.pk %}"
+                                <a class="btn btn-warning" href="{% url 'mailing:edit_custom' object.pk %}"
                                    role="button">Редактировать</a>
                                 {% endif %}
                                 {% if user == object.owner %}
-                                <a class="btn btn-danger" href="{% url 'mailing:delete' object.pk %}"
+                                <a class="btn btn-danger" href="{% url 'mailing:delete_custom' object.pk %}"
                                    role="button">Удалить</a>
                                 {% endif %}
                             </div>

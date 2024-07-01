@@ -21,7 +21,7 @@ class StyleFormMixin(forms.ModelForm):
 class MailingForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Mailing
-        exclude = ('mailing_status',)
+        exclude = ('mailing_status', 'owner',)
 
     def clean_massage(self):
         cleaned_data = self.cleaned_data.get('massage', )
@@ -34,7 +34,7 @@ class MailingForm(StyleFormMixin, forms.ModelForm):
 class MassageForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Massage
-        fields = '__all__'
+        exclude = ('owner',)
 
     def clean_massage(self):
         cleaned_data = self.cleaned_data.get('massage', )
@@ -44,12 +44,10 @@ class MassageForm(StyleFormMixin, forms.ModelForm):
         return cleaned_data
 
 
-
-
 class CustomersForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Customers
-        fields = '__all__'
+        exclude = ('owner',)
 
     def clean_comment(self):
         cleaned_data = self.cleaned_data.get('comment', )

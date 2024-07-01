@@ -132,7 +132,7 @@ class CustomersCreateView(LoginRequiredMixin, CreateView):
 class CustomersUpdateView(LoginRequiredMixin, UpdateView):
     model = Customers
     form_class = CustomersForm
-    success_url = reverse_lazy('mailing:home')
+    success_url = reverse_lazy('mailing:customers_list')
     login_url = "users:login"
     redirect_field_name = "redirect_to"
 
@@ -146,7 +146,7 @@ class CustomersUpdateView(LoginRequiredMixin, UpdateView):
 
 class CustomersDeleteView(LoginRequiredMixin, DeleteView):
     model = Customers
-    success_url = reverse_lazy('mailing:home')
+    success_url = reverse_lazy('mailing:customers_list')
     login_url = "users:login"
     redirect_field_name = "redirect_to"
 
@@ -156,3 +156,25 @@ class CustomersDetailView(DetailView):
     template_name = 'mailing/customers_detail.html'
     login_url = "users:login"
     redirect_field_name = "redirect_to"
+
+
+class CustomersListView(ListView):
+    model = Customers
+    template_name = 'mailing/customers_list.html'
+
+    def get_queryset(self):
+        return get_qs_from_cache(qs=Customers.objects.all(), key='customers_list')
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        self.object = form.save()
+        user = self.request.user
+        self.object.owner = user
+        self.object.save()
+        if formset.is_valid():
+            formset.instance = self.object
+            formset.save()
+        else:
+            return self.form_invalid(form)
+        return super().form_valid(form)

@@ -21,7 +21,7 @@
                             <div class="card-body">
                                 <p class="card-text">Почта: {{ object.email }}</p>
                                 <p class="card-text">ФИO: {{ object.fio }}</p>
-                                <p class="card-text">Комментарий: {{ object.comment }}</p>
+                                <p class="card-text">Комментарий: {{ object.comment|slice:100 }}</p>
                             </div>
                         </div>
                     </div>
