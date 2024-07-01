@@ -23,18 +23,27 @@ class MailingForm(StyleFormMixin, forms.ModelForm):
         model = Mailing
         exclude = ('mailing_status',)
 
+    def clean_massage(self):
+        cleaned_data = self.cleaned_data.get('massage', )
+
+        if cleaned_data in words:
+            raise forms.ValidationError('Возникла ошибка сообщении')
+        return cleaned_data
+
 
 class MassageForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Massage
         fields = '__all__'
 
-    def clean_name(self):
-        cleaned_data = self.cleaned_data.get('massage', 'subject_massage', )
+    def clean_massage(self):
+        cleaned_data = self.cleaned_data.get('massage', )
 
         if cleaned_data in words:
-            raise forms.ValidationError('Возникла ошибка')
+            raise forms.ValidationError('Возникла ошибка сообщении')
         return cleaned_data
+
+
 
 
 class CustomersForm(StyleFormMixin, forms.ModelForm):
@@ -42,9 +51,16 @@ class CustomersForm(StyleFormMixin, forms.ModelForm):
         model = Customers
         fields = '__all__'
 
-    def clean_name(self):
-        cleaned_data = self.cleaned_data.get('email', 'fio', 'comment',)
+    def clean_comment(self):
+        cleaned_data = self.cleaned_data.get('comment', )
 
         if cleaned_data in words:
-            raise forms.ValidationError('Возникла ошибка ')
+            raise forms.ValidationError('Возникла ошибка в описании ')
+        return cleaned_data
+
+    def clean_fio(self):
+        cleaned_data = self.cleaned_data.get('fio', )
+
+        if cleaned_data in words:
+            raise forms.ValidationError('Возникла ошибка в ФИО')
         return cleaned_data
