@@ -15,7 +15,7 @@
         <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
             <h1 class="display-4">Рассылка</h1>
             <p class="lead">Рассылка - это отличный вариант для уведомления ваших пользователей</p>
-            <p class="lead">Создано рассыок в нашем сервисе: {{ object_list.count }}</p>
+            <p class="lead">Создано рассыок в нашем сервисе: {{ mailing_list.count }}</p>
             
             
         </div>
@@ -27,7 +27,7 @@
                         клиентах</a>
                 </div>
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                    {% for object in object_list %}
+                    {% for object in mailing_list %}
                         {% if object.is_active %}
                         <div class="col">
                             <div class="card shadow-sm">

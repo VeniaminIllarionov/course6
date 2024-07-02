@@ -38,20 +38,20 @@ class MailingListView(ListView):
         return super().form_valid(form)
 
 
-class MailingCreateView(LoginRequiredMixin, CreateView):
-    model = Mailing
-    form_class = MailingForm
+class MassageCreateView(LoginRequiredMixin, CreateView):
+    model = Massage
+    form_class = MassageForm
     success_url = reverse_lazy('mailing:home')
     login_url = "users:login"
     redirect_field_name = "redirect_to"
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        massage_formset = inlineformset_factory(Mailing, Massage, form=MassageForm, extra=1)
+        MailingFormset = inlineformset_factory(Massage, Mailing, form=MailingForm, extra=1)
         if self.request.method == 'POST':
-            context_data['formset'] = massage_formset(self.request.POST, instance=self.object)
+            context_data['formset'] = MailingFormset(self.request.POST, instance=self.object)
         else:
-            context_data['formset'] = massage_formset(instance=self.object)
+            context_data['formset'] = MailingFormset(instance=self.object)
         return context_data
 
     def form_valid(self, form):
@@ -67,20 +67,20 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class MailingUpdateView(LoginRequiredMixin, UpdateView):
-    model = Mailing
-    form_class = MailingForm
+class MassageUpdateView(LoginRequiredMixin, UpdateView):
+    model = Massage
+    form_class = MassageForm
     success_url = reverse_lazy('mailing:home')
     login_url = "users:login"
     redirect_field_name = "redirect_to"
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        MassageFormset = inlineformset_factory(Mailing, Massage, form=MassageForm, extra=1)
+        MailingFormset = inlineformset_factory(Massage, Mailing, form=MailingForm, extra=1)
         if self.request.method == 'POST':
-            context_data['formset'] = MassageFormset(self.request.POST, instance=self.object)
+            context_data['formset'] = MailingFormset(self.request.POST, instance=self.object)
         else:
-            context_data['formset'] = MassageFormset(instance=self.object)
+            context_data['formset'] = MailingFormset(instance=self.object)
         return context_data
 
     def form_valid(self, form):
@@ -115,7 +115,7 @@ def settings_toggle_active(request, pk):
 
 class MailingDetailView(LoginRequiredMixin, DetailView):
     model = Mailing
-    template_name = 'mailing/mailing_detail.html'
+    template_name = 'mailing/massage_detail.html'
     login_url = "users:login"
     redirect_field_name = "redirect_to"
 
