@@ -30,6 +30,7 @@ class Mailing(models.Model):
                                       verbose_name='статус рассылки')
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, verbose_name='Пользователь', null=True, blank=True)
+    is_active = models.BooleanField(default=True, verbose_name='Статус Рассылки')
 
     class Meta:
         verbose_name = 'Рассылка'
@@ -81,8 +82,6 @@ class Mailing_attempt(models.Model):
     last_attempt = models.DateTimeField(auto_now_add=True, verbose_name='дата и время последней попытки')
     status = models.CharField(choices=status_variants, default=None, verbose_name='статус попытки')
     mail_response = models.CharField(max_length=50, verbose_name='ответ почтового сервера')
-    is_active = models.BooleanField(default=True, verbose_name='Статус Рассылки')
-
     class Meta:
         verbose_name = 'Попытка рассылки'
         verbose_name_plural = 'Попытки рассылок'

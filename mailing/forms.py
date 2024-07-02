@@ -21,7 +21,7 @@ class StyleFormMixin(forms.ModelForm):
 class MailingForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Mailing
-        exclude = ('mailing_status', 'owner',)
+        fields = ('frequency',)
 
     def clean_massage(self):
         cleaned_data = self.cleaned_data.get('massage', )

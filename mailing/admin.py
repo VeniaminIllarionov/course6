@@ -7,7 +7,7 @@ from users.models import User
 # Register your models here.
 @admin.register(Mailing)
 class MailingAdmin(admin.ModelAdmin):
-    list_display = ('start_time', 'end_time', 'frequency', 'mailing_status',)
+    list_display = ('start_time', 'end_time', 'frequency', 'mailing_status', 'is_active')
     list_filter = ('mailing_status',)
     search_fields = ('mailing_status',)
 
@@ -21,7 +21,7 @@ class MassageAdmin(admin.ModelAdmin):
 
 @admin.register(Mailing_attempt)
 class Mailing_attemptAdmin(admin.ModelAdmin):
-    list_display = ('last_attempt', 'status', 'is_active',)
+    list_display = ('last_attempt', 'status',)
     list_filter = ('status',)
     search_fields = ('status',)
 

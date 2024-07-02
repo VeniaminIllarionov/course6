@@ -4,10 +4,10 @@ from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-
+from mailing.commands import runapscheduler
 from mailing.forms import MailingForm, MassageForm, CustomersForm
 from mailing.models import Mailing, Customers, Massage, Mailing_attempt
-from mailing.services import get_qs_from_cache, my_job
+from mailing.services import get_qs_from_cache
 
 
 class MailingListView(ListView):
@@ -16,6 +16,7 @@ class MailingListView(ListView):
 
     def get_queryset(self):
         return get_qs_from_cache(qs=Mailing.objects.all(), key='mailings_list')
+
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -128,8 +129,9 @@ class CustomersCreateView(LoginRequiredMixin, CreateView):
         customer.save()
         return super().form_valid(form)
 
-    def send_mail(self):
-        return my_job()
+    @staticmethod
+    def send_mail():
+        return runapscheduler
 
 
 class CustomersUpdateView(LoginRequiredMixin, UpdateView):
@@ -146,8 +148,9 @@ class CustomersUpdateView(LoginRequiredMixin, UpdateView):
         customer.save()
         return super().form_valid(form)
 
-    def send_mail(self):
-        return my_job()
+    @staticmethod
+    def send_mail():
+        return runapscheduler
 
 
 class CustomersDeleteView(LoginRequiredMixin, DeleteView):
