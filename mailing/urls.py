@@ -18,4 +18,5 @@ urlpatterns = [
     path('', MailingListView.as_view(), name='home'),
     path('edit/<int:pk>/', MailingUpdateView.as_view(), name='edit'),
     path('delete/<int:pk>/', MailingDeleteView.as_view(), name='delete'),
-    path('mailing/<int:pk>/', cache_page(60)(MailingDetailView.as_view()), name='mailing_detail'),]
+    path('mailing/<int:pk>/', cache_page(60)(MailingDetailView.as_view()), name='mailing_detail'),
+    ]

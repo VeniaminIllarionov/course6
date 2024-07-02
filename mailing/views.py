@@ -1,10 +1,16 @@
+from datetime import datetime
+
+import pytz
+from apscheduler.schedulers.background import BackgroundScheduler
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import send_mail
 from django.urls import reverse
 from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from mailing.commands import runapscheduler
+
+from config import settings
 from mailing.forms import MailingForm, MassageForm, CustomersForm
 from mailing.models import Mailing, Customers, Massage, Mailing_attempt
 from mailing.services import get_qs_from_cache
@@ -16,7 +22,6 @@ class MailingListView(ListView):
 
     def get_queryset(self):
         return get_qs_from_cache(qs=Mailing.objects.all(), key='mailings_list')
-
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -129,10 +134,6 @@ class CustomersCreateView(LoginRequiredMixin, CreateView):
         customer.save()
         return super().form_valid(form)
 
-    @staticmethod
-    def send_mail():
-        return runapscheduler
-
 
 class CustomersUpdateView(LoginRequiredMixin, UpdateView):
     model = Customers
@@ -147,10 +148,6 @@ class CustomersUpdateView(LoginRequiredMixin, UpdateView):
         customer.owner = user
         customer.save()
         return super().form_valid(form)
-
-    @staticmethod
-    def send_mail():
-        return runapscheduler
 
 
 class CustomersDeleteView(LoginRequiredMixin, DeleteView):
@@ -187,3 +184,5 @@ class CustomersListView(ListView):
         else:
             return self.form_invalid(form)
         return super().form_valid(form)
+
+

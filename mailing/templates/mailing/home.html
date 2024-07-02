@@ -40,9 +40,6 @@
                                             <a class="btn btn-primary"
                                                href="{% url 'mailing:mailing_detail' object.pk %}"
                                                role="button">Подробнее о рассылке</a>
-                                            <a class="btn btn-primary"
-                                               href="{% url 'mailing:customers_detail' object.pk %}"
-                                               role="button">Подробнее о клиентах</a>
                                             {% if user.is_staff or user == object.owner %}
                                                 <a class="btn btn-warning" href="{% url 'mailing:edit' object.pk %}"
                                                    role="button">Редактировать</a>

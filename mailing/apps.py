@@ -1,6 +1,6 @@
 from time import sleep
-
 from django.apps import AppConfig
+
 
 
 
@@ -9,6 +9,7 @@ class MailingConfig(AppConfig):
     name = 'mailing'
 
     def ready(self):
-        from mailing.commands import runapscheduler
+        print("Sending Mails ..")
+        from mailing.services import start_scheduler
         sleep(2)
-        runapscheduler.Command()
+        start_scheduler()
