@@ -1,12 +1,11 @@
+from random import randint, random
+
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import PermissionDenied
 from django.urls import reverse
 from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-
-from config import settings
 from mailing.forms import MailingForm, MassageForm, CustomersForm, MailingManagerForm
 from mailing.models import Mailing, Customers, Massage, Mailing_attempt
 from mailing.services import get_qs_from_cache
@@ -17,7 +16,17 @@ class MassageListView(ListView):
     template_name = 'mailing/home.html'
 
     def get_queryset(self):
-        return get_qs_from_cache(qs=Massage.objects.all(), key='massage_list')
+       return get_qs_from_cache(qs=Massage.objects.filter(), key='massage_list')
+
+
+    def get_context_data(self, **kwargs):
+        # В первую очередь получаем базовую реализацию контекста
+        context = super(MassageListView, self).get_context_data(**kwargs)
+        # Добавляем новую переменную к контексту и инициализируем её некоторым значением
+        context['is_active'] = Mailing.objects.filter(is_active=True)
+        context['customer'] = Customers.objects.all()
+        context['massage'] = Massage.objects.all()
+        return context
 
     def form_valid(self, form):
         context = self.get_context_data()

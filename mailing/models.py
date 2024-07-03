@@ -61,7 +61,7 @@ class Mailing(models.Model):
     massage = models.ForeignKey(Massage, verbose_name='Cообщение', on_delete=models.CASCADE, blank=True, null=True)
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, verbose_name='Пользователь', null=True, blank=True)
-    is_active = models.BooleanField(default=True, verbose_name='Статус Рассылки')
+    is_active = models.BooleanField(default=True, verbose_name='Блокировка Рассылки')
 
     class Meta:
         verbose_name = 'Рассылка'
