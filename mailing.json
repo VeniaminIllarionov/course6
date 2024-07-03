@@ -1,0 +1,56 @@
+[
+  {
+    "model": "mailing.customers",
+    "pk": 1,
+    "fields": {
+      "email": "venya957@gmail.com",
+      "fio": "�������� ���������� �����������",
+      "comment": "���",
+      "owner": 1
+    }
+  },
+  {
+    "model": "mailing.massage",
+    "pk": 1,
+    "fields": {
+      "subject_massage": "�����",
+      "massage": "����",
+      "owner": 1
+    }
+  },
+  {
+    "model": "mailing.massage",
+    "pk": 2,
+    "fields": {
+      "subject_massage": "ggg",
+      "massage": "ggg",
+      "owner": 2
+    }
+  },
+  {
+    "model": "mailing.mailing",
+    "pk": 1,
+    "fields": {
+      "start_time": "2024-07-03T13:08:46.403Z",
+      "end_time": "2024-07-03T13:08:46.403Z",
+      "next_day": "2024-07-04T13:08:53.358Z",
+      "frequency": "per_day",
+      "mailing_status": "finished",
+      "massage": 1,
+      "owner": null,
+      "is_active": true,
+      "clients": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "mailing.mailing_attempt",
+    "pk": 1,
+    "fields": {
+      "last_attempt": "2024-07-03T13:08:53.358Z",
+      "status": "True",
+      "mail_response": null
+    }
+  }
+]
