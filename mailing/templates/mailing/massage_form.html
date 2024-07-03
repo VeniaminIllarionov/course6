@@ -32,6 +32,19 @@
             </div>
         </div>
     {% endif %}
+    {% if not object %}
+    <div class="col-3">
+            <div class="card">
+                <div class="card-body">
+                    {{ formset.management_form }}
+                    {% for form in formset.forms %}
+                    {{ form.as_p }}
+                    <br>
+                    {% endfor %}
+                </div>
+            </div>
+    </div>
+    {% endif %}
 
 
     </form>

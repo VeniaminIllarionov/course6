@@ -1,10 +1,5 @@
-from datetime import datetime
-
-import pytz
-from apscheduler.schedulers.background import BackgroundScheduler
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.core.mail import send_mail
 from django.urls import reverse
 from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404, redirect

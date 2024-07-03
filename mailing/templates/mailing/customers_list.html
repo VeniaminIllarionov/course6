@@ -35,7 +35,7 @@
                             <div class="btn-group">
                                 <a class="btn btn-primary" href="{% url 'mailing:customers_detail' object.pk %}"
                                    role="button">Подробнее о клиентах</a>
-                                {% if perms.catalog.set_published and perms.catalog.can_edit_description and perms.catalog.can_edit_category or user == object.owner %}
+                                {% if user.is_staff or user.superuser or user == object.owner %}
                                 <a class="btn btn-warning" href="{% url 'mailing:edit_custom' object.pk %}"
                                    role="button">Редактировать</a>
                                 {% endif %}
