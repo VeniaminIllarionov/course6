@@ -1,6 +1,6 @@
 from django.utils import timezone
 
-from django.db import models, connection
+from django.db import models
 
 from users.models import User
 
@@ -51,9 +51,8 @@ class Mailing(models.Model):
     )
 
     start_time = models.DateTimeField(default=timezone.now, verbose_name='Начало рассылки')
-    end_time = models.DateTimeField(default=timezone.now, null=True, blank=True, verbose_name='Конец рассылки')
-    next_day = models.DateTimeField(default=timezone.now, null=True, blank=True,
-                                    verbose_name='Следующая отправка рассылки')
+    end_time = models.DateTimeField(null=True, blank=True, verbose_name='Конец рассылки')
+    next_day = models.DateTimeField(null=True, blank=True, verbose_name='Следующая отправка рассылки')
     frequency = models.CharField(max_length=50, choices=period_variants, default='per_day',
                                  verbose_name='периодичность')
     mailing_status = models.CharField(max_length=80, choices=status_variants, default='created',
@@ -80,7 +79,7 @@ class Mailing_attempt(models.Model):
 
     last_attempt = models.DateTimeField(auto_now_add=True, verbose_name='дата и время последней попытки')
     status = models.CharField(choices=status_variants, default=None, verbose_name='статус попытки')
-    mail_response = models.CharField(max_length=50, verbose_name='ответ почтового сервера')
+    mail_response = models.CharField(max_length=50, verbose_name='ответ почтового сервера', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Попытка рассылки'

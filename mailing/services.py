@@ -1,4 +1,7 @@
 from logging import Logger
+from time import sleep
+import time
+import re
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.core.cache import cache
@@ -8,7 +11,7 @@ from datetime import timedelta, datetime
 
 from config import settings
 
-from mailing.models import Mailing, Massage, Customers, Mailing_attempt
+from mailing.models import Mailing, Mailing_attempt
 from django.core.mail import send_mail
 
 
@@ -31,23 +34,35 @@ def my_job():
     today = datetime.now(zone)
     mailings = Mailing.objects.all().filter(is_active=True)
 
+
     for mailing in mailings:
+
         client = mailing.clients.all()
         if mailing.mailing_status != 'finished':
             mailing.mailing_status = 'executing'
             mailing.save()
-            emails_list = [client.email for client in client]
+
+            result = send_mail(
+                subject=mailing.massage.subject_massage,
+                message=mailing.massage.massage,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[client.email for client in client]
+
+            )
+
+            if mailing.start_time is None:
+                mailing.start_time = today
+                mailing.save()
+
+            if mailing.end_time is None:
+                mailing.end_time = mailing.start_time
+                mailing.next_day = mailing.start_time
+                mailing.save()
+
+            print('Пошла рассылка')
 
             print(f'Рассылка {mailing.id} - начало {mailing.start_time}; конец {mailing.end_time}')
 
-            result = send_mail(
-                subject=Massage.subject_massage,
-                message=Massage.massage,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=emails_list
-
-            )
-            print('Пошла рассылка')
 
             status = result == True
 
@@ -55,20 +70,21 @@ def my_job():
             log.save()
 
             if mailing.frequency == 'per_day':
-                mailing.next_date = log.last_attempt + day
+                mailing.next_day = log.last_attempt + day
             elif mailing.frequency == 'per_week':
-                mailing.next_date = log.last_attempt + week
+                mailing.next_day = log.last_attempt + week
             elif mailing.frequency == 'per_month':
-                mailing.next_date = log.last_attempt + month
+                mailing.next_day = log.last_attempt + month
 
             if status:  # на случай сбоя рассылки она останется активной
-                if mailing.next_date < mailing.end_time:
+                if mailing.next_day < mailing.end_time:
                     mailing.status = 'created'
                 else:
                     mailing.status = 'finished'
+                    sleep_to_time(next_day=mailing.next_day, today=today)
 
             mailing.save()
-            print(f'Рассылка {mailing.id} отправлена {today} (должна была {mailing.next_date})')
+            print(f'Рассылка {mailing.id} отправлена {today} (должна была {mailing.next_day})')
 
 
 def start_scheduler():
@@ -80,3 +96,15 @@ def start_scheduler():
 
     if not scheduler.running:
         scheduler.start()
+
+
+
+
+def sleep_to_time(next_day, today):
+    TimeToSleep = next_day - today
+
+    #if TimeToSleep < 0:
+        #print("Это время прошло", int(abs(TimeToSleep)), "секунд назад")
+        #return
+    time.sleep(int(TimeToSleep))
+    print("Задержка завершена")

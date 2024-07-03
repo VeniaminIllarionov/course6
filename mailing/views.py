@@ -17,11 +17,11 @@ from mailing.services import get_qs_from_cache
 
 
 class MailingListView(ListView):
-    model = Mailing
+    model = Massage
     template_name = 'mailing/home.html'
 
     def get_queryset(self):
-        return get_qs_from_cache(qs=Mailing.objects.all(), key='mailings_list')
+        return get_qs_from_cache(qs=Massage.objects.all(), key='massage_list')
 
     def form_valid(self, form):
         context = self.get_context_data()
@@ -96,8 +96,8 @@ class MassageUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class MailingDeleteView(LoginRequiredMixin, DeleteView):
-    model = Mailing
+class MassageDeleteView(LoginRequiredMixin, DeleteView):
+    model = Massage
     success_url = reverse_lazy('mailing:home')
     login_url = "users:login"
     redirect_field_name = "redirect_to"
@@ -113,8 +113,8 @@ def settings_toggle_active(request, pk):
     return redirect(reverse('mailing:home'))
 
 
-class MailingDetailView(LoginRequiredMixin, DetailView):
-    model = Mailing
+class MassageDetailView(LoginRequiredMixin, DetailView):
+    model = Massage
     template_name = 'mailing/massage_detail.html'
     login_url = "users:login"
     redirect_field_name = "redirect_to"
