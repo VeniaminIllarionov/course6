@@ -3,6 +3,7 @@ from datetime import datetime
 import pytz
 from apscheduler.schedulers.background import BackgroundScheduler
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.forms import inlineformset_factory
@@ -11,7 +12,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from config import settings
-from mailing.forms import MailingForm, MassageForm, CustomersForm
+from mailing.forms import MailingForm, MassageForm, CustomersForm, MailingManagerForm
 from mailing.models import Mailing, Customers, Massage, Mailing_attempt
 from mailing.services import get_qs_from_cache
 
@@ -82,6 +83,14 @@ class MassageUpdateView(LoginRequiredMixin, UpdateView):
         else:
             context_data['formset'] = MailingFormset(instance=self.object)
         return context_data
+
+    def get_form_class(self):
+        user = self.request.user
+        if user == self.object.owner:
+            return MassageForm
+        if user.is_staff:
+            return MailingManagerForm
+        raise PermissionDenied
 
     def form_valid(self, form):
         formset = self.get_context_data()['formset']
@@ -184,5 +193,3 @@ class CustomersListView(ListView):
         else:
             return self.form_invalid(form)
         return super().form_valid(form)
-
-

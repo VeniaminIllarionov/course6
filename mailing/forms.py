@@ -21,7 +21,7 @@ class StyleFormMixin(forms.ModelForm):
 class MailingForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Mailing
-        fields = ('frequency', 'clients', )
+        fields = ('frequency', 'clients',)
 
     def clean_massage(self):
         cleaned_data = self.cleaned_data.get('massage', )
@@ -42,6 +42,12 @@ class MassageForm(StyleFormMixin, forms.ModelForm):
         if cleaned_data in words:
             raise forms.ValidationError('Возникла ошибка сообщении')
         return cleaned_data
+
+
+class MailingManagerForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = Mailing
+        fields = ('is_active',)
 
 
 class CustomersForm(StyleFormMixin, forms.ModelForm):
