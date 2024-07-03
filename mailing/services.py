@@ -78,13 +78,16 @@ def my_job():
 
             if status:  # на случай сбоя рассылки она останется активной
                 if mailing.next_day < mailing.end_time:
-                    mailing.status = 'created'
+                    mailing.mailing_status = 'executing'
                 else:
-                    mailing.status = 'finished'
-                    sleep_to_time(next_day=mailing.next_day, today=today)
+                    mailing.mailing_status = 'finished'
+                    print('Я все')
 
             mailing.save()
             print(f'Рассылка {mailing.id} отправлена {today} (должна была {mailing.next_day})')
+            print(mailing.mailing_status)
+
+
 
 
 def start_scheduler():
@@ -100,11 +103,4 @@ def start_scheduler():
 
 
 
-def sleep_to_time(next_day, today):
-    TimeToSleep = next_day - today
 
-    #if TimeToSleep < 0:
-        #print("Это время прошло", int(abs(TimeToSleep)), "секунд назад")
-        #return
-    time.sleep(int(TimeToSleep))
-    print("Задержка завершена")
