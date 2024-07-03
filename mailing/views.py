@@ -16,7 +16,7 @@ from mailing.models import Mailing, Customers, Massage, Mailing_attempt
 from mailing.services import get_qs_from_cache
 
 
-class MailingListView(ListView):
+class MassageListView(ListView):
     model = Massage
     template_name = 'mailing/home.html'
 
