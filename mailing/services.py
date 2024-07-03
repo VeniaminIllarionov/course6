@@ -37,6 +37,12 @@ def my_job():
 
     for mailing in mailings:
 
+        if mailing.next_day is not None:
+            if today > mailing.next_day:
+                mailing.start_time = today
+                mailing.mailing_status = 'executing'
+                mailing.save()
+
         client = mailing.clients.all()
         if mailing.mailing_status != 'finished':
             mailing.mailing_status = 'executing'
@@ -50,13 +56,8 @@ def my_job():
 
             )
 
-            if mailing.start_time is None:
-                mailing.start_time = today
-                mailing.save()
-
             if mailing.end_time is None:
                 mailing.end_time = mailing.start_time
-                mailing.next_day = mailing.start_time
                 mailing.save()
 
             print('Пошла рассылка')
