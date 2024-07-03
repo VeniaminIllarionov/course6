@@ -11,7 +11,7 @@ class User(AbstractUser):
 
     last_name = models.CharField(max_length=150, verbose_name='Фамилия')
 
-    avatar = models.ImageField(upload_to='users/', verbose_name='Аватар', blank=True, null=True,
+    avatar = models.ImageField(upload_to='users/photo', verbose_name='Аватар', blank=True, null=True,
                                help_text='Загрузите свой аватар')
     phone = models.CharField(max_length=35, verbose_name='Номер телефона', blank=True,
                              null=True, help_text='Введите номер телефона')

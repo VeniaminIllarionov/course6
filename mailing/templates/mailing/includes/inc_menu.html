@@ -2,6 +2,7 @@
     <h5 class="my-0 mr-md-auto font-weight-normal">Рассылка</h5>
     <nav class="ms-5">
         <a class="p-2 btn btn-outline-primary" href="{% url 'mailing:home' %}">Рассылки</a>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'blogentry:list' %}">Блог</a>
     </nav>
     <nav class="ms-5">
         {% if user.is_staff or user.superuser %}

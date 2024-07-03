@@ -1,52 +1,35 @@
 {% extends 'mailing/base.html' %}
 
 {% block content %}
-<div class="col-12">
-    <form class="row" method="POST" enctype="multipart/form-data">
+    <div class="col-12">
+        <form class="row" method="POST" enctype="multipart/form-data">
 
-        <div class="col-3">
-            <div class="card">
-                <div class="card-body">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-success">
-                        {% if object %}
-                        Сохранить
-                        {% else %}
-                        Создать
-                        {% endif %}
-                    </button>
+            <div class="col-3">
+                <div class="card">
+                    <div class="card-body">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-success">
+                            {% if object %}
+                                Сохранить
+                            {% else %}
+                                Создать
+                            {% endif %}
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-       {% if user == massage.owner %}
-        <div class="col-3">
-            <div class="card">
-                <div class="card-body">
-                    {{ formset.management_form }}
-                    {% for form in formset.forms %}
-                    {{ form.as_p }}
-                    <br>
-                    {% endfor %}
+            <div class="col-3">
+                <div class="card">
+                    <div class="card-body">
+                        {{ formset.management_form }}
+                        {% for form in formset.forms %}
+                            {{ form.as_p }}
+                            <br>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endif %}
-    {% if not object %}
-    <div class="col-3">
-            <div class="card">
-                <div class="card-body">
-                    {{ formset.management_form }}
-                    {% for form in formset.forms %}
-                    {{ form.as_p }}
-                    <br>
-                    {% endfor %}
-                </div>
-            </div>
+        </form>
     </div>
-    {% endif %}
-
-
-    </form>
-</div>
 {% endblock %}

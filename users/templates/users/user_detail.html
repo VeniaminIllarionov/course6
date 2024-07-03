@@ -1,5 +1,4 @@
 {% extends 'mailing/home.html' %}
-{% load static %}
 {% load user_tags %}
 
 {% block content %}
@@ -17,7 +16,7 @@
             <div class="card-body mx-20">
                 <form method="post" enctype="multipart/form-data"></form>
                 <h5 class="card-title">{% if object.first_name != '' and object.last_name != '' %} {{object.first_name}} {{object.last_name}} {% else %} {{object.email}} {% endif %}</h5>
-                <img src="{{object.image | media_filter }}" >
+                <img src="{{object.avatar | media_filter }}">
                 <p class="card-text">Дата регистрации: {{object.date_joined}}</p>
                 <p class="card-text">Последний вход: {{object.last_login}}</p>
                 <p class="card-text">Подтверждён: {{object.is_verified}}</p>

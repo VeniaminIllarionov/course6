@@ -70,22 +70,20 @@ class MassageUpdateView(LoginRequiredMixin, UpdateView):
     login_url = "users:login"
     redirect_field_name = "redirect_to"
 
+
+
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        MailingFormset = inlineformset_factory(Massage, Mailing, form=MailingForm, extra=1)
+        user = self.request.user
+        if user == self.object.owner:
+            MailingFormset = inlineformset_factory(Massage, Mailing, form=MailingForm, extra=1)
+        elif user.is_staff or user.superuser:
+            MailingFormset = inlineformset_factory(Massage, Mailing, form=MailingManagerForm, extra=1)
         if self.request.method == 'POST':
             context_data['formset'] = MailingFormset(self.request.POST, instance=self.object)
         else:
             context_data['formset'] = MailingFormset(instance=self.object)
         return context_data
-
-    def get_form_class(self):
-        user = self.request.user
-        if user == self.object.owner:
-            return MassageForm
-        if user.is_staff:
-            return MailingManagerForm
-        raise PermissionDenied
 
     def form_valid(self, form):
         formset = self.get_context_data()['formset']
