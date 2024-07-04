@@ -1,5 +1,5 @@
-from random import randint, random
-
+from django.db.models import Max
+import random
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.forms import inlineformset_factory
@@ -16,7 +16,10 @@ class MassageListView(ListView):
     template_name = 'mailing/home.html'
 
     def get_queryset(self):
-       return get_qs_from_cache(qs=Massage.objects.filter(), key='massage_list')
+        return get_qs_from_cache(qs=Massage.objects.filter()[:3], key='massage_list')
+
+
+
 
 
     def get_context_data(self, **kwargs):
@@ -26,6 +29,7 @@ class MassageListView(ListView):
         context['is_active'] = Mailing.objects.filter(is_active=True)
         context['customer'] = Customers.objects.all()
         context['massage'] = Massage.objects.all()
+
         return context
 
     def form_valid(self, form):
@@ -78,8 +82,6 @@ class MassageUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('mailing:home')
     login_url = "users:login"
     redirect_field_name = "redirect_to"
-
-
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
