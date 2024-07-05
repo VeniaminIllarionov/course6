@@ -4,6 +4,7 @@ from django.db import models
 
 # Create your models here.
 class User(AbstractUser):
+    username = None
 
     email = models.EmailField(unique=True, verbose_name='Почта')
 
@@ -22,7 +23,7 @@ class User(AbstractUser):
     is_block = models.BooleanField(default=False, verbose_name='Блокировка пользователя')
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username',]
+    REQUIRED_FIELDS = []
 
     class Meta:
         verbose_name = 'Пользователь'
